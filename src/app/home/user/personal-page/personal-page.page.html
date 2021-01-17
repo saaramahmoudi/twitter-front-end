@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>personal-page</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-lg = 6 offset-lg = 3 size-md = 8 offset-md = 2 size-sm = 10 offset-sm = 1 size = 12 *ngIf="userInfo">
+        <ion-img [src]="userInfo.imageSrc"></ion-img>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-lg = 6 offset-lg = 3 size-md = 8 offset-md = 2 size-sm = 10 offset-sm = 1 size = 12>
+        <ion-text class="ion-text-center">
+          <h1>
+            Welcom to your account {{userInfo ? userInfo.name : ''}}, you are using {{authService.getEmail()}} !
+          </h1>
+        </ion-text>
+      </ion-col>
+      
+    </ion-row>
+
+    <ion-row  *ngIf="userInfo">
+      <ion-col size-lg = 8 offset-lg = 2 size-md = 10 offset-md = 1 size = 12>
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input [(ngModel)]="userInfo.name" type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Image Src</ion-label>
+            <ion-input [(ngModel)]="userInfo.imageSrc" type="text"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-lg = 6 offset-lg = 3 size-md = 8 offset-md = 2 size-sm = 10 offset-sm = 1 size = 12>
+        <ion-button color="success" (click)="saveData()" expand="block" >
+          Save Changed Data
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-lg = 6 offset-lg = 3 size-md = 8 offset-md = 2 size-sm = 10 offset-sm = 1 size = 12>
+        <ion-button color="danger" (click)="logout()" expand="block" >
+          Log out
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>

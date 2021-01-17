@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>authenticate</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+
+  <ion-grid>
+
+    <ion-row>
+
+      <ion-col size-lg = 6 offset-lg = 3 size-md = 8 offset-md = 2 size-sm = 10 offset-sm = 1 size = 12>
+        <ion-img src="assets/quitter.png"></ion-img>
+      </ion-col>
+
+      <!-- <ion-col size-lg = 8 offset-lg = 2 size-md = 10 offset-md = 1 size = 12>
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input [(ngModel)]="email" type="email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input [(ngModel)]="password" type="password"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-col> -->
+    </ion-row>
+
+    <!-- <ion-row>
+      <ion-col size-lg = 8 offset-lg = 2 size-md = 10 offset-md = 1 size = 12>
+        <ion-button color="primary" expand="block" [disabled] = '!(this.isUserInfoValid())'>
+          Login or Create
+        </ion-button>
+      </ion-col>
+    </ion-row> -->
+
+    <ion-row>
+      <ion-col size-lg = 8 offset-lg = 2 size-md = 10 offset-md = 1 size = 12>
+        <ion-button color="secondary" expand="block" (click)="signInWithGoogle()">
+          Sing in with google
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <!-- <ion-row>
+      <ion-col size-lg = 8 offset-lg = 2 size-md = 10 offset-md = 1 size = 12>
+        <ion-button color="danger" expand="block" [disabled] = '!(this.isEmailVaid())'>
+          Forgot password
+        </ion-button>
+      </ion-col>
+    </ion-row> -->
+  </ion-grid>
+
+  
+</ion-content>
