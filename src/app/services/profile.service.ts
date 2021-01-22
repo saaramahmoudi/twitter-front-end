@@ -30,7 +30,7 @@ export class ProfileService{
 
     setUp(status: boolean){
         if(status){
-            this._userInfo = new FirestoreRealTime<UserInfo>("UserProfile", () => {return this.authService.getEmail()}, this.httpClient);
+            this._userInfo = new FirestoreRealTime<UserInfo>("UserProfile", () => {return this.authService.getEmail()});
             this._userInfo.start();
             this._snap.snap = this._userInfo;
             this._snap.subject.next(this._userInfo);

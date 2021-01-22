@@ -38,8 +38,8 @@ export class PersonalPagePage implements OnInit {
 
   setUpUserInfo(data: FirestoreRealTime<UserInfo>){
     this.userInfoFirestore = data;
-    this.userInfo = data.snapShot;
-    data.observable.subscribe(
+    this.userInfo = data.instance.snap;
+    data.instance.subject.subscribe(
       res => this.userInfo = res
     );
   }
