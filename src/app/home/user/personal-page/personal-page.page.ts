@@ -3,6 +3,7 @@ import { ProfileService, UserInfo } from './../../../services/profile.service';
 import { AuthService } from './../../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-personal-page',
@@ -14,7 +15,9 @@ export class PersonalPagePage implements OnInit {
   constructor(
     public authService: AuthService,
     public profileService: ProfileService,
-    private router: Router
+    private router: Router,
+    public loadingController: LoadingController,
+    public alertController: AlertController
   ) { }
 
   userInfo: UserInfo;
@@ -48,7 +51,16 @@ export class PersonalPagePage implements OnInit {
   }
 
   async saveData(){
-    await this.profileService.setData(this.userInfo, this.userInfoFirestore);
+    const panel = await this.loadingController.create({message: 'Please wait for update'});
+    panel.present();
+    try{
+      await this.profileService.setData(this.userInfo, this.userInfoFirestore);
+    }catch (e){
+      const ionAlert = await this.alertController.create({message: e.error.message, buttons: ["Ok"]});
+      ionAlert.present();
+    }finally {
+      panel.dismiss();
+    }
   }
 
 }

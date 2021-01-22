@@ -48,14 +48,18 @@ export class ProfileService{
             await firestore.doc.set(userInfo);            
         } catch (e){
             const res = new Promise(
-                async (resolve, rekect) =>{
+                async (resolve, reject) =>{
                     this.httpClient.post('http://localhost:8080/update', {id: userInfo.id}).subscribe(
                         async res => {
                             resolve(await firestore.doc.set(userInfo));
+                        },
+                        err => {
+                            reject(err);
                         }
                     );
                 }
             );
+            return res;
         }
     }
 
