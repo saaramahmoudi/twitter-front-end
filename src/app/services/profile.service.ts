@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { SnapObservable } from './snap.observable';
 import { FirestoreRealTime } from './firestore.realtime';
 import { AuthService } from './auth.service';
@@ -6,6 +7,8 @@ import { Injectable } from "@angular/core";
 export interface UserInfo{
     imageSrc: string;
     name: string;
+    email: string;
+    id: string;
 }
 
 @Injectable({providedIn: 'root'})
@@ -16,7 +19,8 @@ export class ProfileService{
     private _snap = new SnapObservable<FirestoreRealTime<UserInfo>>();
     public get userInfoObservable(): SnapObservable<FirestoreRealTime<UserInfo>> {return this._snap}
     constructor(
-        private authService: AuthService
+        private authService: AuthService,
+        private httpClient: HttpClient 
     ){
         this.setUp(this.authService.isLogedinSnapShot);
         this.authService.isLogedin.subscribe(
@@ -26,7 +30,7 @@ export class ProfileService{
 
     setUp(status: boolean){
         if(status){
-            this._userInfo = new FirestoreRealTime<UserInfo>("UserProfile", () => {return this.authService.getEmail()});
+            this._userInfo = new FirestoreRealTime<UserInfo>("UserProfile", () => {return this.authService.getEmail()}, this.httpClient);
             this._userInfo.start();
             this._snap.snap = this._userInfo;
             this._snap.subject.next(this._userInfo);
@@ -39,6 +43,21 @@ export class ProfileService{
 
 
     
+    async setData(userInfo: UserInfo, firestore: FirestoreRealTime<UserInfo>){
+        try {
+            await firestore.doc.set(userInfo);            
+        } catch (e){
+            const res = new Promise(
+                async (resolve, rekect) =>{
+                    this.httpClient.post('http://localhost:8080/update', {id: userInfo.id}).subscribe(
+                        async res => {
+                            resolve(await firestore.doc.set(userInfo));
+                        }
+                    );
+                }
+            );
+        }
+    }
 
 
 

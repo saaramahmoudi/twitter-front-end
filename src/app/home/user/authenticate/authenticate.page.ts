@@ -24,10 +24,6 @@ export class AuthenticatePage implements OnInit, AfterContentInit {
     private router: Router
   ) {}
 
-  singInOrCreateAccount(){
-    // fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
-  }
-
   signInWithGoogle(){
     this.authService.signInWithGoogle();
   }

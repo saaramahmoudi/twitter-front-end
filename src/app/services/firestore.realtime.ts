@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
 import firebase from 'firebase/app';
@@ -18,7 +19,8 @@ export class FirestoreRealTime<T>{
     doc: firebase.firestore.DocumentReference;
     constructor(
         private collection: string,
-        private  documentGetter: () => string
+        private documentGetter: () => string, 
+        private httpClient: HttpClient 
     ){
         this.db =firebase.firestore(firebase.app());
     }
@@ -37,9 +39,6 @@ export class FirestoreRealTime<T>{
         }
     }
 
-    async setData(T){
-        await this.doc.set(T);
-    }
 
 
 }

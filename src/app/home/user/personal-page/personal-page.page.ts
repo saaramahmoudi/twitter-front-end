@@ -21,6 +21,7 @@ export class PersonalPagePage implements OnInit {
   userInfoFirestore: FirestoreRealTime<UserInfo>;
 
   ngOnInit() {
+
     
     if(this.profileService.userInfoObservable.snap){
 
@@ -47,8 +48,7 @@ export class PersonalPagePage implements OnInit {
   }
 
   async saveData(){
-    console.log(this.userInfo);
-    await this.userInfoFirestore.setData(this.userInfo);
+    await this.profileService.setData(this.userInfo, this.userInfoFirestore);
   }
 
 }
