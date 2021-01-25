@@ -39,6 +39,9 @@ export class PostService {
         if (results.docs.length > 1) {
             throw Error("More than one tweet linked to the post");
         }
+        if (results.docs.length == 0) {
+            throw Error("Post linked to tweet could not be found");
+        }
         console.log(results);
         const post = results.docs[0].data() as Post;
 

@@ -42,11 +42,6 @@ export class SearchService {
         const listRes = [];
         for(let hit of res.hits){
             listRes.push(await this.postService.getPostsByTweetId(hit.objectID));
-            // listRes.push()
-            // const firestoreHits = await this.firestore.collection("Posts").where("tweetId", "==", hit.objectID).get();
-            // for (let doc of firestoreHits.docs) {
-            //     listRes.push(doc.data());
-            // }  
         }
         console.log(res);
         console.log(listRes);
