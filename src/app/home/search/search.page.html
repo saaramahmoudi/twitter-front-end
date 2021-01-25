@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>search</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionChange) = 'search($event)'></ion-searchbar>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-lg = 400 offset-lg = 175 size-md = 500 offset-md = 100 size = 1200>
+        <ion-button expand="block">
+          Show users
+        </ion-button>
+      </ion-col>
+
+      <ion-col size-lg = 400 offset-lg = 50 size-md = 500 offset-md = 50 size = 1200>
+        <ion-button expand="block"  fill="outline">
+          Show tweets 
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list>
+    <ion-item *ngFor ='let item of ["", "", ""]; let i = index' detail [routerLink] = "['/', 'main', 'tabs', 'discover', 'product', item.id]">
+      <ion-icon slot="start" name="person-outline" *ngIf="i%2 == 0"></ion-icon>
+      <ion-icon slot="start" name="document-text-outline" *ngIf="i%2 == 1"></ion-icon>
+      <ion-label>
+        <h1>
+          <!-- {{item.name}} --> Show tweets 
+        </h1>
+        <p>
+          <!-- {{item.price | currency}} --> Something else
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

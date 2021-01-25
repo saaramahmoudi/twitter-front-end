@@ -1,5 +1,5 @@
 import { FirestoreRealTime } from './../../../services/firestore.realtime';
-import { ProfileService, UserInfo } from './../../../services/profile.service';
+import { PersonalProfileService, UserInfo } from './../../../services/profile.service';
 import { AuthService } from './../../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ export class PersonalPagePage implements OnInit {
 
   constructor(
     public authService: AuthService,
-    public profileService: ProfileService,
+    public profileService: PersonalProfileService,
     private router: Router,
     public loadingController: LoadingController,
     public alertController: AlertController

@@ -1,6 +1,4 @@
 import { SnapObservable } from './snap.observable';
-import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -23,7 +21,7 @@ export class FirestoreRealTime<T>{
         private collection: string,
         private documentGetter: () => string, 
     ){
-        this.db =firebase.firestore(firebase.app());
+        this.db = firebase.firestore(firebase.app());
     }
     start(){
         this.hasEnded = false;

@@ -8,11 +8,11 @@ export interface UserInfo{
     imageSrc: string;
     name: string;
     email: string;
-    id: string;
+    tag: string;
 }
 
 @Injectable({providedIn: 'root'})
-export class ProfileService{
+export class PersonalProfileService{
 
     
     private _userInfo:  FirestoreRealTime<UserInfo> = null;
@@ -49,7 +49,7 @@ export class ProfileService{
         } catch (e){
             const res = new Promise(
                 async (resolve, reject) =>{
-                    this.httpClient.post('http://localhost:8080/update', {id: userInfo.id}).subscribe(
+                    this.httpClient.post('http://localhost:8080/update', {tag: userInfo.tag}).subscribe(
                         async res => {
                             resolve(await firestore.doc.set(userInfo));
                         },
