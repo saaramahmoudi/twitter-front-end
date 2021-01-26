@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { SnapObservable } from './snap.observable';
 import { FirestoreRealTime } from './firestore.realtime';
@@ -49,7 +50,7 @@ export class PersonalProfileService{
         } catch (e){
             const res = new Promise(
                 async (resolve, reject) =>{
-                    this.httpClient.post('http://localhost:8080/update', {tag: userInfo.tag}).subscribe(
+                    this.httpClient.post(environment.urls.updateTagUser, {tag: userInfo.tag}).subscribe(
                         async res => {
                             resolve(await firestore.doc.set(userInfo));
                         },

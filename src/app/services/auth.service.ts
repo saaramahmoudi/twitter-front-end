@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { Injectable } from "@angular/core";
 import  firebase  from 'firebase/app';
 import 'firebase/auth';
@@ -27,7 +28,7 @@ export class AuthService{
     }
 
     checkAccount(){
-        this.httpClient.get("http://localhost:8080/check").subscribe(
+        this.httpClient.get(environment.urls.checkUser).subscribe(
             (res: {exists: boolean}) => {
                 if (!res.exists){
                     this.reqForUserCreation();
@@ -36,7 +37,7 @@ export class AuthService{
         )
     }
     reqForUserCreation(){
-        this.httpClient.get("http://localhost:8080/create").subscribe(
+        this.httpClient.get(environment.urls.createUser).subscribe(
             (res: any) => {
                 console.log(res);
             } 

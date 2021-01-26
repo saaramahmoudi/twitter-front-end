@@ -1,4 +1,6 @@
-import { PostService } from './post.service';
+import { UserInfo } from './profile.service';
+import { UserService } from './user.service';
+import { Post, PostService } from './post.service';
 import { Injectable } from '@angular/core';
 
 
@@ -9,12 +11,6 @@ import 'firebase/firestore';
 import algoliasearch from 'algoliasearch/lite';
 
 
-export interface Post {
-    likedByUserIds: []
-    retweetedByUserIds: []
-
-}
-
 @Injectable({providedIn: 'root'})
 export class SearchService {
 
@@ -23,6 +19,7 @@ export class SearchService {
     tweets = this.client.initIndex("tweet");
     users = this.client.initIndex("user");
     constructor(
+        private userService: UserService,
         private postService: PostService
     ){}
 
@@ -30,21 +27,23 @@ export class SearchService {
         return ;
     }
 
-    async searchUser(query: string){
+    async searchUser(query: string): Promise<UserInfo[]>{
         const res = await this.users.search(query);
-        
-        console.log(res);
+        const listRes: UserInfo[] = [];
+        for(let hit of res.hits){
+            listRes.push(await this.userService.getUserSnapShot(hit.objectID));
+        }
+        return listRes;
     }
 
 
-    async searchTweet(query: string){
+    async searchTweet(query: string): Promise<Post[]>{
         const res = await this.tweets.search(query);
-        const listRes = [];
+        const listRes: Post[] = [];
         for(let hit of res.hits){
             listRes.push(await this.postService.getPostsByTweetId(hit.objectID));
         }
-        console.log(res);
-        console.log(listRes);
+        return listRes;
     }
 
 
