@@ -13,12 +13,14 @@ export class AuthService{
     private authSubject: Subject<boolean> = new Subject();
     public get isLogedinSnapShot(): boolean {return firebase.auth().currentUser != null}
     public get isLogedin(): Observable<boolean> {return this.authSubject.asObservable()}
+    public hasEverBeenInit = false;
 
     constructor(
         private httpClient: HttpClient
     ){
         firebase.auth().onAuthStateChanged(
             async (user) => {
+                this.hasEverBeenInit = true;
                 if (user){
                     this.checkAccount();
                 }

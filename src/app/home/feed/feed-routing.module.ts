@@ -1,12 +1,23 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { FeedPage } from './feed.page';
 
 const routes: Routes = [
   {
-    path: '',
-    component: FeedPage
+    path: 'current',
+    loadChildren: () => import('./current/current.module').then( m => m.CurrentPageModule)
+  },
+  {
+    path: 'tweet',
+    loadChildren: () => import('./tweet/tweet.module').then( m => m.TweetPageModule)
+  },
+  {
+    path: 'user',
+    loadChildren: () => import('./user/user.module').then( m => m.UserPageModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'current'
   }
 ];
 

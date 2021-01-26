@@ -1,3 +1,4 @@
+import { LoginGaurd } from './../../services/login.gaurd';
 import { AuthGaurd } from './../../services/auth.gaurd';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -12,7 +13,8 @@ const routes: Routes = [
   },
   {
     path: 'personal-page',
-    loadChildren: () => import('./personal-page/personal-page.module').then( m => m.PersonalPagePageModule)
+    loadChildren: () => import('./personal-page/personal-page.module').then( m => m.PersonalPagePageModule),
+    canActivate: [LoginGaurd]
   },
   {
     path: '**',

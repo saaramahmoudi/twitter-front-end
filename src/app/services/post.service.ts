@@ -5,6 +5,7 @@ import { UserInfo } from './profile.service';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Injectable } from '@angular/core';
+import { PostEvent } from '../home/feed/current/event.service';
 
 
 
@@ -16,6 +17,7 @@ export interface Post {
     userId: string;
     user: UserInfo;
     tweet: Tweet;
+    madeAt: number;
 }
 
 
@@ -29,8 +31,25 @@ export class PostService {
         private tweetService: TweetService,
     ){}
 
+    async completePost(post: Post): Promise<Post>{
+        
+        post.tweet = await this.tweetService.getTweetSnapShot(post.tweetId);
+        post.user = await this.userService.getUserSnapShot(post.userId);
+        return post;
+    }
+
     async getPostSnapShot(id: string): Promise<Post>{
-        return (await this.firestore.collection("Posts").doc(id).get()).data() as Post;
+        const post = (await this.firestore.collection("Posts").doc(id).get()).data() as Post;
+        return await this.completePost(post);
+    }
+
+    async getRecentPostSnapShot(second: number): Promise<Post[]>{
+        const res: Post[] = [];
+        const list = await this.firestore.collection("Posts").where("madeAt", ">=", second).get();
+        for (let item of list.docs) {
+            res.push(await this.completePost(item.data() as Post))
+        }
+        return res;
     }
 
     async getPostsByTweetId(id: string): Promise<Post> {
@@ -42,10 +61,7 @@ export class PostService {
             throw Error("Post linked to tweet could not be found");
         }
         const post = results.docs[0].data() as Post;
-
-        post.tweet = await this.tweetService.getTweetSnapShot(post.tweetId);
-        post.user = await this.userService.getUserSnapShot(post.userId);
-        return post;
+        return await this.completePost(post);
     }
     
 

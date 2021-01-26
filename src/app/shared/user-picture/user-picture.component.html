@@ -1,0 +1,5 @@
+
+<ion-thumbnail slot="start" *ngIf="canBeShown">
+  <ion-img [src] = 'user.imageSrc' (ionError)="canBeShown = false"></ion-img>
+</ion-thumbnail>
+<ion-icon slot="start" name="person-outline" *ngIf="!canBeShown"></ion-icon>

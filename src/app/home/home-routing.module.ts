@@ -1,3 +1,4 @@
+import { LoginGaurd } from './../services/login.gaurd';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomePage } from './home.page';
@@ -9,7 +10,8 @@ const routes: Routes = [
     children: [
       {
         path: 'feed',
-        loadChildren: () => import('./feed/feed.module').then( m => m.FeedPageModule)
+        loadChildren: () => import('./feed/feed.module').then( m => m.FeedPageModule),
+        canActivate: [LoginGaurd]
       },
       {
         path: 'user',
@@ -17,7 +19,8 @@ const routes: Routes = [
       },
       {
         path: 'search',
-        loadChildren: () => import('./search/search.module').then( m => m.SearchPageModule)
+        loadChildren: () => import('./search/search.module').then( m => m.SearchPageModule),
+        canActivate: [LoginGaurd]
       },
     ]
   },

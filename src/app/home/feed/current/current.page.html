@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>current</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row *ngFor="let event of events">
+      <ion-col>
+        <ion-card>
+          <ion-card-header color="primary">
+            <app-user-picture [user]="event.post.user"></app-user-picture>
+            {{event.eventType == 'PostLiked' ? 'Post was liked by ' : event.eventType ==  'PostRetweeted' ? 'Post was retweeted by ' : 'Created by '}} 
+            @{{event.post.user.tag}}
+          </ion-card-header>
+          <ion-card-content>
+            {{event.post.tweet.text}}
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
