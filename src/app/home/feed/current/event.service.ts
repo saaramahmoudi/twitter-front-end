@@ -1,6 +1,6 @@
 import { SnapObservable } from './../../../services/snap.observable';
 import { UserService } from './../../../services/user.service';
-import { UserInfo } from './../../../services/profile.service';
+import { UserInfo, PersonalProfileService } from './../../../services/profile.service';
 import { Post, PostService } from './../../../services/post.service';
 import { Injectable } from "@angular/core";
 
@@ -35,27 +35,70 @@ export class EventService{
     result: SnapObservable<PostEvent[][]> = new SnapObservable<PostEvent[][]>();
     constructor(
         private postService: PostService,
-        private userService: UserService
-    ){}
+        private userService: UserService,
+        private personalService: PersonalProfileService
+    ){
+        
+        const date = new Date();
+        date.setDate(date.getDate() - 6);
+        const seconds = Math.floor(date.getTime()/1000);
+        this.getEvents(seconds);
+        this.personalService.userInfoObservable.snap.instance.subject.subscribe(
+            user => {
 
-    async getEvents(seconds: number){
-        this.result.snap = [[]];
-        this.result.subject.next(this.result.snap);
-        const list = await this.firestore.collection("Events").where("madeAt", ">=", seconds).onSnapshot(
-            (events) => {
-                this.setUpFromDocs(events.docs);
+                this.getEvents(seconds);
             }
         );
+        this.personalService.userInfoObservable.subject.subscribe(
+            userFire => {
+                
+                this.personalService.userInfoObservable.snap.instance.subject.subscribe(
+                    user => {
+                        
+                        this.getEvents(seconds);
+                    }
+                );
+                this.getEvents(seconds);
+            }
+        )
     }
 
-    async setUpFromDocs(docs: firebase.firestore.QueryDocumentSnapshot[]){
-        this.result.snap = [[]];
+    async getEvents(seconds: number){
+        if(!this.personalService.self){
+
+            return;
+        }
+
+        this.result.snap = [];
+        this.result.subject.next(this.result.snap);
+        const ids = this.personalService.self.followingsId || [];
+        ids.push(this.personalService.self.id);
+        let index = 0;
+        for(let id of ids){
+            const arr = [];
+            this.result.snap.push(arr);
+            this.result.subject.next(this.result.snap);
+            await this.firestore.collection("Events").where("madeAt", ">=", seconds).
+            where("madeByUserId", "==", id).
+            onSnapshot(
+                (events) => {
+                    this.setUpFromDocs(events.docs, arr);
+                }
+            );
+            index += 1;
+        }
+    }
+
+    async setUpEvent(event: PostEvent){
+        event.post = await this.postService.getPostSnapShot(event.postId);
+        event.user = await this.userService.getUserSnapShot(event.madeByUserId);
+    }
+    async setUpFromDocs(docs: firebase.firestore.QueryDocumentSnapshot[], list: PostEvent[]){
         for (let item of docs){
             const event = item.data() as PostEvent;
             event.isOg = false;
-            event.post = await this.postService.getPostSnapShot(event.postId);
-            event.user = await this.userService.getUserSnapShot(event.madeByUserId);
-            this.result.snap[0].push(event);
+            this.setUpEvent(event);
+            list.push(event);
         }
         this.result.subject.next(this.result.snap);
     }

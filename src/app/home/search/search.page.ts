@@ -24,7 +24,6 @@ export class SearchPage implements OnInit {
   }
 
   async search(){
-    console.log()
     if (this.searchValue == '') {
       this.tweets = [];
       this.userIds = [];

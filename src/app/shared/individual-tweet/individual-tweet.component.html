@@ -6,7 +6,7 @@
 
 
 
-<ion-card >
+<ion-card *ngIf="event.post">
   <ion-card-header color="primary">
     <app-user-picture [user]="event.post.user" ></app-user-picture>
         <ion-text class="clickable" (click)="showUser()" *ngIf="event.post.user" >

@@ -46,6 +46,7 @@ export class IndividualTweetComponent implements OnInit {
     }finally{
       load.dismiss();
     }
+    load.dismiss();
   }
   async retweet(){
     
