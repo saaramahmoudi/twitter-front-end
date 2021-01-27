@@ -41,6 +41,15 @@ export class PostService {
         if (!post.likedByUserIds){
             post.likedByUserIds = [];
         } 
+        // for(let p of this.posts[post.id]){
+        //     if (!p.likedByUserIds){
+        //         post.likedByUserIds = [];
+        //     } 
+        //     if (!p.likedByUserIds.includes(this.personal.self.id))
+        //         p.likedByUserIds.push(this.personal.self.id);
+        //     else 
+        //         p.likedByUserIds.splice(post.likedByUserIds.indexOf(this.personal.self.id), 1)
+        // }
         return new Promise<void>(
             (resolve, reject) => {
                 console.log("sending like request");
@@ -48,12 +57,6 @@ export class PostService {
                     res => {
                         console.log("result for liking post :" );
                         console.log(res);
-                        for(let p of this.posts[post.id]){
-                            if (!p.likedByUserIds.includes(this.personal.self.id))
-                                p.likedByUserIds.push(this.personal.self.id);
-                            else 
-                                p.likedByUserIds.splice(post.likedByUserIds.indexOf(this.personal.self.id), 1)
-                        }
                         resolve();
                     },
                     err => {
@@ -68,9 +71,18 @@ export class PostService {
 
     retweetPost(post: Post): Promise<void>{
         const payload: ToggleRetweetInterface = {id: post.id};
-        if (!post.retweetedByUserIds){
-            post.retweetedByUserIds = [];
-        } 
+        // if (!post.retweetedByUserIds){
+        //     post.retweetedByUserIds = [];
+        // } 
+        // for(let p of this.posts[post.id]){
+        //     if (!p.retweetedByUserIds){
+        //         post.retweetedByUserIds = [];
+        //     } 
+        //     if (!p.retweetedByUserIds.includes(this.personal.self.id))
+        //         p.retweetedByUserIds.push(this.personal.self.id);
+        //     else 
+        //         p.retweetedByUserIds.splice(p.retweetedByUserIds.indexOf(this.personal.self.id), 1)
+        // }
         return new Promise<void>(
             (resolve, reject) => {
                 console.log("sending retweet request");
@@ -78,12 +90,6 @@ export class PostService {
                     res => {
                         console.log("result for retweeting post :" );
                         console.log(res);
-                        for(let p of this.posts[post.id]){
-                            if (!p.retweetedByUserIds.includes(this.personal.self.id))
-                                p.retweetedByUserIds.push(this.personal.self.id);
-                            else 
-                                p.retweetedByUserIds.splice(p.retweetedByUserIds.indexOf(this.personal.self.id), 1)
-                        }
                         resolve();
                     },
                     err => {
@@ -108,7 +114,7 @@ export class PostService {
 
     async getPostSnapShot(id: string): Promise<Post>{
         const post = (await this.firestore.collection("Posts").doc(id).get()).data() as Post;
-        return await this.completePost(post);
+        return this.completePost(post);
     }
 
     async getPostsOfUserSnapShot(userId: string): Promise<Post[]>{

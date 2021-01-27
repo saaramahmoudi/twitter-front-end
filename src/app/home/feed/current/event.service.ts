@@ -94,6 +94,7 @@ export class EventService{
         event.user = await this.userService.getUserSnapShot(event.madeByUserId);
     }
     async setUpFromDocs(docs: firebase.firestore.QueryDocumentSnapshot[], list: PostEvent[]){
+        list.length = 0;
         for (let item of docs){
             const event = item.data() as PostEvent;
             event.isOg = false;
