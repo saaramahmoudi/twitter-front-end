@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Post, PostService } from './../../../services/post.service';
 import { EventService, PostEvent} from './event.service';
 import { Component, OnInit } from '@angular/core';
@@ -18,29 +19,20 @@ export class CurrentPage implements OnInit {
   // TODO change it so that we paginate the number of days
   ngOnInit() {
     
-    this.setUp();
-
-  }
-
-  async setUp(){
     const date = new Date();
     date.setDate(date.getDate() - 6);
     const seconds = Math.floor(date.getTime()/1000);
-    
-    this.events = await this.eventService.getEvents(seconds);
-    this.posts = await this.postService.getRecentPostSnapShot(seconds);
+    this.eventService.getEvents(seconds);
+    this.setUp(this.eventService.result.snap);
+    this.eventService.result.subject.subscribe(
+      events => this.setUp(events) 
+    );
+  }
 
-    for(let post of this.posts){
-      this.events.push({
-        eventType:  'PostCreated',
-        madeAt: post.madeAt,
-        madeByUserId: post.userId,
-        postId: post.id,
-        post: post,
-        user: post.user
-      })
-    }
-    this.events.sort((e1, e2) => e1.madeAt - e2.madeAt);
+  async setUp(events: PostEvent[][]){
+    this.events = [].concat.apply([], events);
+    console.log(events);
+    this.events.sort((e1, e2) =>  e2.madeAt - e1.madeAt);
   }
 
 }

@@ -17,7 +17,6 @@ export class AuthGaurd  implements CanActivate  {
         state: RouterStateSnapshot
       ): Observable<boolean|UrlTree>|Promise<boolean|UrlTree>|boolean|UrlTree {
         if(this.authService.isLogedinSnapShot){
-            console.log(this.authService.isLogedinSnapShot);
             this.router.navigate(["/", "home", "tabs", "user", "personal-page"]);
         }
         return !this.authService.isLogedinSnapShot;

@@ -4,9 +4,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { TweetPage } from './tweet.page';
 
 const routes: Routes = [
+  
   {
-    path: '',
+    path: ':id',
     component: TweetPage
+  },
+  {
+    path: '**',
+    redirectTo: "/home/tabs/user/authenticate"
   }
 ];
 

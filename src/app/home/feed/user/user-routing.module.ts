@@ -5,8 +5,12 @@ import { UserPage } from './user.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':id',
     component: UserPage
+  },
+  {
+    path: '**',
+    redirectTo: "/home/tabs/user/authenticate"
   }
 ];
 

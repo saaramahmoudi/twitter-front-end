@@ -1,3 +1,7 @@
+import { LoadingController } from '@ionic/angular';
+import { ToggleLikeInterface, ToggleRetweetInterface } from './../../environments/communications';
+import { environment } from './../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
 import { Tweet, TweetService } from './tweet.service';
 import { UserInfo } from './profile.service';
@@ -5,7 +9,6 @@ import { UserInfo } from './profile.service';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Injectable } from '@angular/core';
-import { PostEvent } from '../home/feed/current/event.service';
 
 
 
@@ -29,8 +32,50 @@ export class PostService {
     constructor(
         private userService: UserService,
         private tweetService: TweetService,
+        private httpClient: HttpClient,
     ){}
 
+    likePost(post: Post): Promise<void>{
+        const payload: ToggleLikeInterface = {id: post.id};
+        return new Promise<void>(
+            (resolve, reject) => {
+                console.log("sending like request");
+                this.httpClient.post(environment.urls.toggleLikePost, payload).subscribe(
+                    res => {
+                        console.log("result for liking post :" );
+                        console.log(res);
+                        resolve();
+                    },
+                    err => {
+                        console.log("error for liking post :" );
+                        console.log(err);
+                        resolve();
+                    }
+                );
+            }
+        )
+    }
+
+    retweetPost(post: Post): Promise<void>{
+        const payload: ToggleRetweetInterface = {id: post.id};
+        return new Promise<void>(
+            (resolve, reject) => {
+                console.log("sending retweet request");
+                this.httpClient.post(environment.urls.toggleRetweetPost, payload).subscribe(
+                    res => {
+                        console.log("result for retweeting post :" );
+                        console.log(res);
+                        resolve();
+                    },
+                    err => {
+                        console.log("error for retweeting post :" );
+                        console.log(err);
+                        resolve();
+                    }
+                );
+            }
+        )
+    }
     async completePost(post: Post): Promise<Post>{
         
         post.tweet = await this.tweetService.getTweetSnapShot(post.tweetId);
@@ -45,6 +90,7 @@ export class PostService {
 
     async getRecentPostSnapShot(second: number): Promise<Post[]>{
         const res: Post[] = [];
+        // const t = this.firestore.collection("Posts").where("madeAt", ">=", second).
         const list = await this.firestore.collection("Posts").where("madeAt", ">=", second).get();
         for (let item of list.docs) {
             res.push(await this.completePost(item.data() as Post))

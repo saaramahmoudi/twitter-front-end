@@ -8,16 +8,7 @@
   <ion-grid>
     <ion-row *ngFor="let event of events">
       <ion-col>
-        <ion-card>
-          <ion-card-header color="primary">
-            <app-user-picture [user]="event.post.user"></app-user-picture>
-            {{event.eventType == 'PostLiked' ? 'Post was liked by ' : event.eventType ==  'PostRetweeted' ? 'Post was retweeted by ' : 'Created by '}} 
-            @{{event.post.user.tag}}
-          </ion-card-header>
-          <ion-card-content>
-            {{event.post.tweet.text}}
-          </ion-card-content>
-        </ion-card>
+        <app-individual-tweet class="fw" [event] = "event"></app-individual-tweet>
       </ion-col>
     </ion-row>
   </ion-grid>

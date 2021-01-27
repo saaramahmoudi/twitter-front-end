@@ -1,3 +1,4 @@
+import { SnapObservable } from './../../../services/snap.observable';
 import { UserService } from './../../../services/user.service';
 import { UserInfo } from './../../../services/profile.service';
 import { Post, PostService } from './../../../services/post.service';
@@ -22,6 +23,8 @@ export interface PostEvent{
     postId: string;
     post: Post;
     user: UserInfo;
+    isReversal: boolean;
+    isOg: boolean;
 }
 
 
@@ -29,22 +32,32 @@ export interface PostEvent{
 export class EventService{
 
     firestore = firebase.firestore(firebase.app());
-
+    result: SnapObservable<PostEvent[][]> = new SnapObservable<PostEvent[][]>();
     constructor(
         private postService: PostService,
         private userService: UserService
     ){}
 
-    async getEvents(seconds: number): Promise<PostEvent[]>{
-        const res: PostEvent[] = [];
-        const list = await this.firestore.collection("Events").where("madeAt", ">=", seconds).get();
-        for (let item of list.docs){
+    async getEvents(seconds: number){
+        this.result.snap = [[]];
+        this.result.subject.next(this.result.snap);
+        const list = await this.firestore.collection("Events").where("madeAt", ">=", seconds).onSnapshot(
+            (events) => {
+                this.setUpFromDocs(events.docs);
+            }
+        );
+    }
+
+    async setUpFromDocs(docs: firebase.firestore.QueryDocumentSnapshot[]){
+        this.result.snap = [[]];
+        for (let item of docs){
             const event = item.data() as PostEvent;
+            event.isOg = false;
             event.post = await this.postService.getPostSnapShot(event.postId);
             event.user = await this.userService.getUserSnapShot(event.madeByUserId);
-            res.push(event);
+            this.result.snap[0].push(event);
         }
-        return res;
+        this.result.subject.next(this.result.snap);
     }
     
 }
