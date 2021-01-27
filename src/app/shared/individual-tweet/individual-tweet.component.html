@@ -9,13 +9,13 @@
 <ion-card >
   <ion-card-header color="primary">
     <app-user-picture [user]="event.post.user" ></app-user-picture>
-        <ion-text class="profile" (click)="showUser()" >
+        <ion-text class="clickable" (click)="showUser()" *ngIf="event.post.user" >
           {{event.eventType == 'PostLiked' ? 'Post was liked by ' : event.eventType ==  'PostRetweeted' ? 'Post was retweeted by ' : 'Created by '}} 
           @{{event.post.user.tag}}
         </ion-text>
   </ion-card-header>
   <ion-card-content class="ion-margin-top">
-    <ion-text class="ion-margin-top">
+    <ion-text class="ion-margin-top" *ngIf="event.post.tweet">
       {{event.post.tweet.text}}
     </ion-text>
     <ion-grid>
@@ -52,15 +52,21 @@
         <ion-grid>
           <ion-row>
             <ion-col size-lg=100 offset-lg=475 size-md=200 offset-md=375 size=600 class="ion-text-center">
-              <ion-text class="ion-text-center">
+              <ion-text class="ion-text-center" class="clickable" (click)="showLikes = !showLikes; showRetweets = false;" >
                 Likes {{event.post.likedByUserIds ? event.post.likedByUserIds.length : 0}}
               </ion-text>
             </ion-col>
             <ion-col size-lg=100 offset-lg=50 size-md=200 offset-md=50 size=600 class="ion-text-center">
-              <ion-text class="ion-text-center">
+              <ion-text class="ion-text-center" class="clickable" (click)="showRetweets = !showRetweets; showLikes = false;">
                 Retweets {{event.post.retweetedByUserIds ? event.post.retweetedByUserIds.length : 0}}
               </ion-text>
 
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size=1200 *ngIf="showLikes || showRetweets">
+              <app-list-of-users [userIds]="event.post.likedByUserIds" *ngIf="showLikes"></app-list-of-users>
+              <app-list-of-users [userIds]="event.post.retweetedByUserIds" *ngIf="showRetweets"></app-list-of-users>
             </ion-col>
           </ion-row>
         </ion-grid>

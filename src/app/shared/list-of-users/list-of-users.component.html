@@ -1,0 +1,21 @@
+<ion-list>
+
+
+  <ion-item *ngFor="let user of users" detail 
+  [routerLink] = '["/", "home", "tabs", "feed", "user", user.id]'
+  >
+    <!-- <ion-icon slot="start" name="person-outline"></ion-icon> -->
+    <app-user-picture [user]="user"></app-user-picture>
+    <ion-label>
+      <h1>
+        {{user.tag}} 
+      </h1>
+      <p>
+        {{user.id}}
+      </p>
+    </ion-label>
+  </ion-item>
+
+
+
+</ion-list>

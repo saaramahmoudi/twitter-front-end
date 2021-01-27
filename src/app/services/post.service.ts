@@ -1,5 +1,5 @@
 import { LoadingController } from '@ionic/angular';
-import { ToggleLikeInterface, ToggleRetweetInterface } from './../../environments/communications';
+import { ToggleLikeInterface, ToggleRetweetInterface, CreatePostResource } from './../../environments/communications';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
@@ -88,6 +88,18 @@ export class PostService {
         return await this.completePost(post);
     }
 
+    async getPostsOfUserSnapShot(userId: string): Promise<Post[]>{
+
+        const list = await this.firestore.collection("Posts").where("userId", "==", userId).get();
+        const res: Post[] = [];
+        for (let item of list.docs) {
+            const post = item.data() as Post
+            res.push(post);
+            // We don't wait so that we can use concurrency
+            this.completePost(post);
+        }
+        return res;
+    }
     async getRecentPostSnapShot(second: number): Promise<Post[]>{
         const res: Post[] = [];
         // const t = this.firestore.collection("Posts").where("madeAt", ">=", second).
@@ -110,6 +122,21 @@ export class PostService {
         return await this.completePost(post);
     }
     
+
+    tweet(text: string){
+        const payload: CreatePostResource = {text};
+        console.log("creating post");
+        this.httpClient.post(environment.urls.createPost, payload).subscribe(
+            res => {
+                console.log("Post creation result");
+                console.log(res);
+            },
+            err => {
+                console.log("Post creation err");
+                console.log(err);
+            }
+        );
+    }
 
 }
 

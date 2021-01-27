@@ -23,7 +23,7 @@ export interface Url{
 
 export interface CreatePostResource{
     text: string;
-    mediaType: MediaType;
+    mediaType?: MediaType;
 }
 
 export interface ToggleLikeInterface{

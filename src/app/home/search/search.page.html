@@ -21,11 +21,14 @@
         </ion-button>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="searchTweets">
+      <ion-col size=1200 *ngFor ='let tweet of tweets; let i = index' >
+        <app-individual-tweet [post]="tweet"></app-individual-tweet>
+      </ion-col>
+    </ion-row>
   </ion-grid>
-  <ion-list *ngIf="searchTweets">
-    <!-- detail [routerLink] = "['/', 'main', 'tabs', 'discover', 'product', item.id]" -->
+  <!-- <ion-list *ngIf="searchTweets">
     <ion-item *ngFor ='let tweet of tweets; let i = index' >
-      <!-- <ion-icon slot="start" name="person-outline" *ngIf="i%2 == 0"></ion-icon> -->
       <ion-icon slot="start" name="document-text-outline"></ion-icon>
       <ion-label>
         <h1>
@@ -36,24 +39,10 @@
         </p>
       </ion-label>
     </ion-item>
-  </ion-list>
-  <ion-list *ngIf="!searchTweets">
-    <!-- detail [routerLink] = "['/', 'main', 'tabs', 'discover', 'product', item.id]" -->
-    <ion-item *ngFor ='let userItem of users; let i = index' >
-      <ion-thumbnail slot="start" *ngIf="userItem.imageCanBeShown">
-        <ion-img [src] = 'userItem.user.imageSrc' (ionError)="imageError(userItem)"></ion-img>
-      </ion-thumbnail>
-      <ion-icon slot="start" name="person-outline" *ngIf="!userItem.imageCanBeShown"></ion-icon>
-      <ion-label>
-        <h1>
-          {{userItem.user.tag}} 
-        </h1>
-        <p>
-          {{userItem.user.name}}
-        </p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  </ion-list> -->
+  
+  <app-list-of-users [userIds]="userIds" *ngIf="!searchTweets"></app-list-of-users>
+  
 </ion-content>
 
 

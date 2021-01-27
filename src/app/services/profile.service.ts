@@ -6,10 +6,13 @@ import { AuthService } from './auth.service';
 import { Injectable } from "@angular/core";
 
 export interface UserInfo{
+    id: string;
     imageSrc: string;
     name: string;
     email: string;
     tag: string;
+    followersId: string[];
+    followingsId: string[];
 }
 
 @Injectable({providedIn: 'root'})
@@ -19,6 +22,7 @@ export class PersonalProfileService{
     private _userInfo:  FirestoreRealTime<UserInfo> = null;
     private _snap = new SnapObservable<FirestoreRealTime<UserInfo>>();
     public get userInfoObservable(): SnapObservable<FirestoreRealTime<UserInfo>> {return this._snap}
+    public self: UserInfo;
     constructor(
         private authService: AuthService,
         private httpClient: HttpClient 
@@ -27,8 +31,23 @@ export class PersonalProfileService{
         this.authService.isLogedin.subscribe(
             state => this.setUp(state)
         );
+
+        if(this.userInfoObservable.snap){
+
+            this.setUpUserInfo(this.userInfoObservable.snap);
+          }
+          this.userInfoObservable.subject.subscribe(
+            info => this.setUpUserInfo(info)
+          );
     }
 
+    setUpUserInfo(data: FirestoreRealTime<UserInfo>){
+        this.self = data.instance.snap;
+        data.instance.subject.subscribe(
+            res => this.self = res
+        );
+    }
+      
     setUp(status: boolean){
         if(status){
             this._userInfo = new FirestoreRealTime<UserInfo>("UserProfile", () => {return this.authService.getEmail()});

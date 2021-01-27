@@ -20,3 +20,5 @@ import { CurrentPage } from './current.page';
   declarations: [CurrentPage]
 })
 export class CurrentPageModule {}
+
+

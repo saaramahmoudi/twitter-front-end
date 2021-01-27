@@ -59,6 +59,19 @@ export class EventService{
         }
         this.result.subject.next(this.result.snap);
     }
+
+    turnPostToEvent(post: Post): PostEvent{
+        return {
+            eventType:  'PostCreated',
+            madeAt: post.madeAt,
+            madeByUserId: post.userId,
+            postId: post.id,
+            post: post,
+            user: post.user,
+            isReversal: false,
+            isOg: true
+          };
+    }
     
 }
 

@@ -27,11 +27,11 @@ export class SearchService {
         return ;
     }
 
-    async searchUser(query: string): Promise<UserInfo[]>{
+    async searchUser(query: string): Promise<string[]>{
         const res = await this.users.search(query);
-        const listRes: UserInfo[] = [];
+        const listRes: string[] = [];
         for(let hit of res.hits){
-            listRes.push(await this.userService.getUserSnapShot(hit.objectID));
+            listRes.push(hit.objectID);
         }
         return listRes;
     }
@@ -41,7 +41,13 @@ export class SearchService {
         const res = await this.tweets.search(query);
         const listRes: Post[] = [];
         for(let hit of res.hits){
-            listRes.push(await this.postService.getPostsByTweetId(hit.objectID));
+            try{
+                listRes.push(await this.postService.getPostsByTweetId(hit.objectID));       
+            }
+            catch (e){
+                console.log("got the following error when retrieving tweet searchs");
+                console.log(e);
+            }
         }
         return listRes;
     }

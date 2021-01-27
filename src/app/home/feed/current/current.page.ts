@@ -11,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
 export class CurrentPage implements OnInit {
   events: PostEvent[] = [];
   posts: Post[] = []; 
+  tweetText = "";
   constructor(
     private eventService: EventService,
     private postService: PostService
@@ -33,6 +34,10 @@ export class CurrentPage implements OnInit {
     this.events = [].concat.apply([], events);
     console.log(events);
     this.events.sort((e1, e2) =>  e2.madeAt - e1.madeAt);
+  }
+
+  tweet(){
+    this.postService.tweet(this.tweetText);
   }
 
 }

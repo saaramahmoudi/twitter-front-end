@@ -6,6 +6,25 @@
 
 <ion-content>
   <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header color="primary">
+            Create a new tweet
+          </ion-card-header>
+          <ion-card-content class="ion-margin-vertical">
+            <ion-label position="floating">Tweeter</ion-label>
+            <ion-textarea placeholder="Your text" [(ngModel)]="tweetText"></ion-textarea>
+            <ion-button class="fw" expand="block" (click)="tweet()" >
+              <ion-text class="ion-margin-end">
+                Retweet
+              </ion-text>
+              <ion-icon name="logo-twitter"></ion-icon>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
     <ion-row *ngFor="let event of events">
       <ion-col>
         <app-individual-tweet class="fw" [event] = "event"></app-individual-tweet>

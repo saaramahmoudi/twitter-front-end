@@ -1,13 +1,8 @@
 import { UserInfo } from './../../services/profile.service';
 import { Post } from './../../services/post.service';
 import { SearchService } from './../../services/search.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
-
-interface UserListItem {
-  user: UserInfo; 
-  imageCanBeShown: boolean;
-}
 @Component({
   selector: 'app-search',
   templateUrl: './search.page.html',
@@ -17,32 +12,35 @@ export class SearchPage implements OnInit {
 
   searchTweets: boolean = true;
   tweets: Post[] = [];
-  users: UserListItem[] = [];
-  searchValue: string;
+  userIds: string[] = [];
+  searchValue: string = '';
 
   constructor(
-    private searchService: SearchService
+    private searchService: SearchService,
+    private ref: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
   }
 
   async search(){
+    console.log()
+    if (this.searchValue == '') {
+      this.tweets = [];
+      this.userIds = [];
+      this.ref.detectChanges();
+      return;
+    }
     if (this.searchTweets) {
       this.tweets = await this.searchService.searchTweet(this.searchValue);
     }else {
-      this.users = [];
-      for (let user of await this.searchService.searchUser(this.searchValue)){
-        this.users.push({user, imageCanBeShown: true})
-      }
+      this.userIds = await this.searchService.searchUser(this.searchValue);
+      this.ref.detectChanges();
     }
   }
   setSearchValue($event: {detail: {value: string}}){
     this.searchValue = $event.detail.value;
     this.search();
-  }
-  imageError(userListItem: UserListItem){
-    userListItem.imageCanBeShown = false;
   }
 
 }

@@ -1,5 +1,6 @@
+import { EventService } from './../../home/feed/current/event.service';
 import { LoadingController } from '@ionic/angular';
-import { PostService } from './../../services/post.service';
+import { Post, PostService } from './../../services/post.service';
 import { Router } from '@angular/router';
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { PostEvent } from 'src/app/home/feed/current/event.service';
@@ -14,17 +15,25 @@ export class IndividualTweetComponent implements OnInit {
 
   @Input() event: PostEvent;
 
+  @Input() post: Post;
+  showLikes = false;
+  showRetweets = false;
   constructor(
     private router: Router,
     private postService: PostService,
+    private eventService: EventService,
     private loadingController: LoadingController,
     private host: ElementRef<HTMLElement>
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (! this.event){
+      this.event = this.eventService.turnPostToEvent(this.post);
+    }
+  }
 
   showUser(){
-    this.router.navigate(["/", "home", "tabs", "feed", "user", this.event.user.tag])
+    this.router.navigate(["/", "home", "tabs", "feed", "user", this.event.user.id])
   }
 
   async callFunctionAndWait(func: () => Promise<void>){
@@ -53,7 +62,7 @@ export class IndividualTweetComponent implements OnInit {
     );
   }
   showTweet(){
-    this.router.navigate(["/", "home", "tabs", "feed", "tweet", this.event.user.tag])
+    this.router.navigate(["/", "home", "tabs", "feed", "tweet", this.event.postId])
   }
 
 }
