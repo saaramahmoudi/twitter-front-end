@@ -52,9 +52,30 @@ export class UserService{
         return res;
     }
 
-    followUser(userId: string){
+    followUser(otherUser: UserInfo){
+        const userId: string = otherUser.id;
+
+        // Save changes locally
+        if (!otherUser.followersId){
+            otherUser.followersId = [];
+        } 
+        if (!otherUser.followersId.includes(this.personalProfile.self.id))
+            otherUser.followersId.push(this.personalProfile.self.id);
+        else 
+            otherUser.followersId.splice(otherUser.followersId.indexOf(this.personalProfile.self.id), 1)
+
+        
+        if (!this.personalProfile.self.followingsId){
+            this.personalProfile.self.followingsId = [];
+        } 
+        if (!this.personalProfile.self.followingsId.includes(userId))
+            this.personalProfile.self.followingsId.push(userId);
+        else 
+            this.personalProfile.self.followingsId.splice(this.personalProfile.self.followingsId.indexOf(userId), 1)
+            
+
+        // Send req to server
         const payload: ToggleFollowResource = {userId};
-        console.log("requesting toggle follow");
         this.httpClient.post(environment.urls.followUser, payload).subscribe(
             res => {
                 console.log("here is toggle follow req result");

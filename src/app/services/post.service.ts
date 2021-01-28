@@ -38,18 +38,20 @@ export class PostService {
 
     likePost(post: Post): Promise<void>{
         const payload: ToggleLikeInterface = {id: post.id};
+        // The next section updates the values locally for likes
         if (!post.likedByUserIds){
             post.likedByUserIds = [];
         } 
-        // for(let p of this.posts[post.id]){
-        //     if (!p.likedByUserIds){
-        //         post.likedByUserIds = [];
-        //     } 
-        //     if (!p.likedByUserIds.includes(this.personal.self.id))
-        //         p.likedByUserIds.push(this.personal.self.id);
-        //     else 
-        //         p.likedByUserIds.splice(post.likedByUserIds.indexOf(this.personal.self.id), 1)
-        // }
+        for(let p of this.posts[post.id]){
+            if (!p.likedByUserIds){
+                p.likedByUserIds = [];
+            } 
+            if (!p.likedByUserIds.includes(this.personal.self.id))
+                p.likedByUserIds.push(this.personal.self.id);
+            else 
+                p.likedByUserIds.splice(post.likedByUserIds.indexOf(this.personal.self.id), 1)
+        }
+        // Then we send a req to the server
         return new Promise<void>(
             (resolve, reject) => {
                 console.log("sending like request");
@@ -71,18 +73,22 @@ export class PostService {
 
     retweetPost(post: Post): Promise<void>{
         const payload: ToggleRetweetInterface = {id: post.id};
-        // if (!post.retweetedByUserIds){
-        //     post.retweetedByUserIds = [];
-        // } 
-        // for(let p of this.posts[post.id]){
-        //     if (!p.retweetedByUserIds){
-        //         post.retweetedByUserIds = [];
-        //     } 
-        //     if (!p.retweetedByUserIds.includes(this.personal.self.id))
-        //         p.retweetedByUserIds.push(this.personal.self.id);
-        //     else 
-        //         p.retweetedByUserIds.splice(p.retweetedByUserIds.indexOf(this.personal.self.id), 1)
-        // }
+        // The next section updates the values locally for retweets
+
+        if (!post.retweetedByUserIds){
+            post.retweetedByUserIds = [];
+        } 
+        for(let p of this.posts[post.id]){
+            if (!p.retweetedByUserIds){
+                p.retweetedByUserIds = [];
+            } 
+            if (!p.retweetedByUserIds.includes(this.personal.self.id))
+                p.retweetedByUserIds.push(this.personal.self.id);
+            else 
+                p.retweetedByUserIds.splice(p.retweetedByUserIds.indexOf(this.personal.self.id), 1)
+        }
+        
+        // Then we send a req to the server
         return new Promise<void>(
             (resolve, reject) => {
                 console.log("sending retweet request");

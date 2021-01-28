@@ -43,7 +43,7 @@ export class UserPage implements OnInit {
   }
 
   follow(){
-    this.userService.followUser(this.user.id);
+    this.userService.followUser(this.user);
   }
 
 }
